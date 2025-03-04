@@ -1,528 +1,327 @@
-# HealthHub: Deployment of A 100% Serverless Application on AWS Using Amazon Congnito, S3, API Gateway, Dynamodb, and Amazon Lambda Services Via Cloudformation
+# AWS Medical Information AI Voice Conversion
+
+## Implementation of Functionality for converting Medical Information into Natural Speech in Multiple Languages Using AWS Artificial Intelligence Services (Amazon Polly & Amazon Translate)
 
 <p align="center">
-<img src="https://i.imgur.com/HjkyCIb.png" height="80%" width="80%" alt="HealthHub Architecture"/>
+<img src="https://i.imgur.com/xsfS2Tn.png" height="80%" width="80%" alt="Pic"/>
 <br />
 <br />
 
 ## Project Description
-The Health Hub project is a cloud-based healthcare application designed to facilitate interactions between patients and doctors. It employs a serverless architecture using AWS to ensure scalability, flexibility, and cost-effectiveness. The application's features include user registration, secure management of appointments, and easy retrieval of medical records. In addition, this foundational structure sets the stage for integrating artificial intelligence capabilities such as text-to-speech and language translation. Through a phased approach, the project focuses on building, testing, and refining the architecture while ensuring resource optimization and cost management.
+This project involves implementing a serverless solution on AWS to convert medical information into natural speech in multiple languages using Amazon Polly and Amazon Translate. The solution features secure authentication via Amazon Cognito, data hosting on Amazon S3, backend processing with API Gateway and AWS Lambda, and storage in DynamoDB. The architecture ensures scalability, security, and real-time processing and is ideal for multilingual healthcare applications.
 
+<p align="center">
+<img src="https://i.imgur.com/YD8C8aG.png" height="80%" width="80%" alt="Pic"/>
+<br />
+<br />
+
+This project implements a serverless solution on AWS to convert medical information into natural speech in multiple languages using Amazon Polly and Amazon Translate.
+ 
 ## Project Objectives
-1. **Establish Serverless Architecture**: Build and deploy a serverless backend leveraging AWS services for scalability and performance.
-2. **Ensure Secure Data Handling**: Implement security measures for managing sensitive healthcare data while maintaining accessibility.
-3. **Develop Modular Functionality**: Design reusable components in the application to support the addition of advanced features over time.
-4. **Optimize Deployment Processes**: Create efficient workflows for deploying, testing, and cleaning up resources after each phase.
-5. **Lay the Groundwork for AI Integration**: Prepare the system for the integration of AI services such as Amazon Polly and Amazon Translate in subsequent stages.
+1.	Automate the transcription of doctor-patient audio conversations into text.
+2.	Ensure support for multiple languages, including English and Portuguese.
+3.	Provide secure storage of transcriptions in medical records for easy retrieval.
+4.	Leverage a hybrid cloud approach using Azure AI Speech Service for transcription and AWS for backend infrastructure.
+5.	Implement real-time monitoring and logging to ensure system reliability.
+6.	Optimize resources to minimize costs and ensure scalability for future enhancements.
 
 ## Project Solution
-### Part 1: Backend and API Configuration
-- Set up a secure backend using AWS Lambda, API Gateway, and DynamoDB.
-- Configure endpoints to enable seamless API communication for user management, appointments, and data retrieval.
-- Verify functionality through API testing and log inspection.
+### Part 1: Azure AI Speech Service and Backend Setup
+1.	Azure Speech Service Configuration:
+    - Set up Azure Speech Service and retrieved the speech key and region.
+    - Tested transcription in English and Portuguese for accurate recognition.
+2.	Deploy HealthHub Backend:
+    - Downloaded and unzipped application files.
+    - Installed necessary dependencies.
+    - Configured Azure credentials for transcription and deployed backend services to process audio files.
 
-### Part 2: Frontend Development and Integration
-- Install and configure the frontend using Vite.
-- Set up package dependencies using npm and link the frontend to the backend API through environment variables.
-- Deploy static files to Amazon S3 for hosting.
-
-### Part 3: Application Testing and Resource Cleanup
-- Deploy and test the integrated frontend and backend system by registering users, scheduling appointments, and verifying data flow.
-- Handle security configurations, including enabling ports and editing inbound rules in AWS Security Groups.
-- Demonstrate resource cleanup using the SLS remove command and manually deleting AWS services left undeleted by CloudFormation.
+### Part 2: Frontend Deployment and Transcription Testing
+1.	Deploy HealthHub Frontend:
+    - Configured the API base URL to connect with the backend.
+    - Deployed the frontend application for user interactions.
+2.	System Testing:
+    - Registered a doctor and patient.
+    - Uploaded and processed audio conversations in both English and Portuguese.
+    - Verified transcription accuracy and saved the text into the patient's medical records.
+3.	Explored Azure Speech Service Metrics:
+    - Monitored service usage and analyzed transcription performance metrics, including latency and service availability.
 
 ## Tools and Technologies
-### 1. Cloud Services:
-- AWS Lambda
-- Amazon API Gateway
-- Amazon DynamoDB
-- Amazon S3 (static site hosting)
-- Amazon CloudFormation
-- Amazon EC2 (workstation)
+1.	Azure AI Speech Service: For multilingual audio-to-text transcription.
+2.	AWS Components:
+    - Amazon Cognito: For user authentication and authorization.
+    - Amazon S3: To store application-related files.
+    - AWS API Gateway: For managing API requests.
+    - AWS Lambda: For serverless backend execution.
+    - Amazon DynamoDB: To store transcribed text in patient medical records.
+    - Amazon CloudWatch: For monitoring and logging.
+    - AWS CloudFormation: For provisioning and managing resources.
+3.	HealthHub Application: Frontend and backend systems for interaction with transcription services.
+4.	Languages and Frameworks: Python for backend development and RESTful APIs.
 
-### 2. Programming and Development Tools:
-- Node.js (Backend development)
-- Vite (Frontend development)
-- npm (Package management)
-
-### 3. Version Control and Testing Tools:
-- GitHub (Repository management)
-- Postman (API testing)
-- VS Code (Integrated development environment)
-
-## AWS Cloud Architecture Project Solution (Parts 1, 2, and 3)
-### Step-by-Step Instructions
-#### Part 1: Setting Up the Base Architecture
-##### Step 1: Setting Up the AWS Environment
-1. **Login to AWS Console**:
-   - Navigate to the AWS Management Console.
-   - Ensure you are using the correct AWS region (e.g., us-east-1).
-
-2. **Create an IAM Role**:
-   - Navigate to IAM → Roles → Create Role.
-<p align="center">
-<img src="https://i.imgur.com/TW27eOx.png" height="80%" width="80%" alt="Pic"/>
-<br />
-<br />
- 
-<p align="center">
-<img src="https://i.imgur.com/KOyGz8b.png" height="80%" width="80%" alt="Pic"/>
-<br />
-<br />
- 
-   - Choose AWS Service → EC2 → Next.
-<p align="center">
-<img src="https://i.imgur.com/V0YnbqW.png" height="80%" width="80%" alt="Pic"/>
-<br />
-<br />
- 
-   - Attach the AdministratorAccess policy to allow full access.
-<p align="center">
-<img src="https://i.imgur.com/RkxhgEO.png" height="80%" width="80%" alt="Pic"/>
-<br />
-<br />
- 
-   - Click Next → Review the details → Name the role tcb-hh-role.
-<p align="center">
-<img src="https://i.imgur.com/osUtMu7.png" height="80%" width="80%" alt="Pic"/>
-<br />
-<br />
- 
-   - Complete the role creation process and take note of the role name.
-<p align="center">
-<img src="https://i.imgur.com/E9Uw8lz.png" height="80%" width="80%" alt="Pic"/>
-<br />
-<br />
- 
-3. **Launch an EC2 Instance**:
-   - Navigate to EC2 → Instances → Launch Instance.
-
-##### Step 2: Launching the EC2 Workstation Instance
-1. Launch an EC2 instance named tcb-hh-ws with the following configurations:
-<p align="center">
-<img src="https://i.imgur.com/rMIPiT4.png" height="80%" width="80%" alt="Pic"/>
-<br />
-<br />
- 
-   - Provide EC2 Instance with unique name (tcb-hh-ws)
-<p align="center">
-<img src="https://i.imgur.com/x6HNhu9.png" height="80%" width="80%" alt="Pic"/>
-<br />
-<br />
- 
-   - Select the Amazon Linux 2 AMI.
-<p align="center">
-<img src="https://i.imgur.com/fpX5jVL.png" height="80%" width="80%" alt="Pic"/>
-<br />
-<br />
- 
-   - Choose the t2.medium instance type 
-   *Note: This instance type is not part of the AWS Free Tier!*
-<p align="center">
-<img src="https://i.imgur.com/XA3V5Bp.png" height="80%" width="80%" alt="Pic"/>
-<br />
-<br />
- 
-   - Create Key Pair
-   - SSH Key: `tcb-hh-key`
-<p align="center">
-<img src="https://i.imgur.com/Azj60l9.png" height="80%" width="80%" alt="Pic"/>
-<br />
-<br />
- 
-   - download the key pair file (.pem), and save it securely
-
-   Under Security Groups, allow:
-   - SSH (port 22) for your IP address.
-   - HTTP (port 80) for public access
-   - SG: `Allow SSH Traffic`
-<p align="center">
-<img src="https://i.imgur.com/PGet86x.png" height="80%" width="80%" alt="Pic"/>
-<br />
-<br />
- 
-   - Storage: `30 Gib` | `gp3`
-<p align="center">
-<img src="https://i.imgur.com/sMfibD7.png" height="80%" width="80%" alt="Pic"/>
-<br />
-<br />
- 
-   - Advanced details
-   - IAM instance profile: `tcb-hh-role`
-<p align="center">
-<img src="https://i.imgur.com/ZZutPWx.png" height="80%" width="80%" alt="Pic"/>
-<br />
-<br />
- 
-   - Click Launch Instance to Complete EC2 creation process 
-<p align="center">
-<img src="https://i.imgur.com/6eBxIqu.png" height="80%" width="80%" alt="Pic"/>
-<br />
-<br />
- 
-2. Once launched, connect to the instance using the AWS Console SSH connection.
-   Connect to the EC2 Instance:
-   - Using the downloaded key pair, connect to the EC2 instance:
-<p align="center">
-<img src="https://i.imgur.com/TP65YTL.png" height="80%" width="80%" alt="Pic"/>
-<br />
-<br />
-
-##### Step 3: Preparing the Workstation
-1. Validate the installation of AWS CLI, Node.js, NPM, and the Serverless Framework.
-   Checking tools and services available
-   - aws --version
-   - node -v
-   - npm -v
-   - serverless --version
-   - sls --version
-<p align="center">
-<img src="https://i.imgur.com/e8oXTQD.png" height="80%" width="80%" alt="Pic"/>
-<br />
-<br />
- 
-2. Install Serverless Framework and Dependencies:
-   - Download and run the NVM installation script from GitHub using curl and bash
-<p align="center">
-<img src="https://i.imgur.com/fXpbAgM.png" height="80%" width="80%" alt="Pic"/>
-<br />
-<br />
- 
-   - Reload the shell configuration file to apply changes made by the NVM installer
-<p align="center">
-<img src="https://i.imgur.com/cxhFWMf.png" height="80%" width="80%" alt="Pic"/>
-<br />
-<br />
- 
-   - Use NVM to download and install the latest Long-Term Support version of Node.js
-<p align="center">
-<img src="https://i.imgur.com/iLeDo2A.png" height="80%" width="80%" alt="Pic"/>
-<br />
-<br />
- 
-   - Run a Node.js command that prints the message along with the current Node.js version
-<p align="center">
-<img src="https://i.imgur.com/tqafykB.png" height="80%" width="80%" alt="Pic"/>
-<br />
-<br />
- 
-<p align="center">
-<img src="https://i.imgur.com/S2IszZ0.png" height="80%" width="80%" alt="Pic"/>
-<br />
-<br />
- 
-3. Install Serverless Framework version 3 globally using npm 
-<p align="center">
-<img src="https://i.imgur.com/knOvebF.png" height="80%" width="80%" alt="Pic"/>
-<br />
-<br />
- 
-   - Display the installed version of the Serverless Framework using the 'serverless' command serverless --version
-<p align="center">
-<img src="https://i.imgur.com/knOvebF.png" height="80%" width="80%" alt="Pic"/>
-<br />
-<br />
- 
-<p align="center">
-<img src="https://i.imgur.com/NrKsB2Y.png" height="80%" width="80%" alt="Pic"/>
-<br />
-<br />
- 
-#### Part 2: Implementing the Backend
-##### Step 1: Setting Up Backend Files
-1. HealthHub Backend Implementation
-   - Installing Backend Project Dependencies
-<p align="center">
-<img src="https://i.imgur.com/FfFKMmV.png" height="80%" width="80%" alt="Pic"/>
+## Step-by-Step Directions
+### Part 1: Backend Implementation
+#### Step 1: Preparing the Environment
+1. Launching the EC2 Workstation
+    - Start the EC2 instance used for development.
+ <p align="center">
+<img src="https://i.imgur.com/6OnGHHy.png" height="80%" width="80%" alt="Pic"/>
 <br />
 <br />
 
 <p align="center">
-<img src="https://i.imgur.com/ZAV4oTP.png" height="80%" width="80%" alt="Pic"/>
+<img src="https://i.imgur.com/LGDqoMV.png" height="80%" width="80%" alt="Pic"/>
 <br />
 <br />
 
-2. Navigate to the backend folder:
+2. Downloading and Unzipping Project Files
+    - Use the command:
 <p align="center">
-<img src="https://i.imgur.com/PEn6mNp.png" height="80%" width="80%" alt="Pic"/>
+<img src="https://i.imgur.com/Sg1U67f.png" height="80%" width="80%" alt="Pic"/>
 <br />
 <br />
  
-3. Review important files such as package.json and serverless-compose.yml for dependencies and configurations.
+    - Navigate to the backend folder:
 <p align="center">
-<img src="https://i.imgur.com/n3FinkJ.png" height="80%" width="80%" alt="Pic"/>
+<img src="https://i.imgur.com/JcBXKQG.png" height="80%" width="80%" alt="Pic"/>
+<br />
+<br />
+ 
+    - Check backend files
+ <p align="center">
+<img src="https://i.imgur.com/3vg1qdk.png" height="80%" width="80%" alt="Pic"/>
 <br />
 <br />
 
 <p align="center">
-<img src="https://i.imgur.com/SLi4hvP.png" height="80%" width="80%" alt="Pic"/>
-<br />
-<br />
- 
-   Inspect the Project Structure
-   - Verify the project directory structure using the tree command
-<p align="center">
-<img src="https://i.imgur.com/WdkmO4i.png" height="80%" width="80%" alt="Pic"/>
-<br />
-<br />
- 
-   - The output should confirm proper setup.
-<p align="center">
-<img src="https://i.imgur.com/y1mtghr.png" height="80%" width="80%" alt="Pic"/>
-<br />
-<br />
- 
-##### Step 2: Installing Dependencies
-1. Install dependencies for all service
-<p align="center">
-<img src="https://i.imgur.com/v2ZkQSv.png" height="80%" width="80%" alt="Pic"/>
-<br />
-<br />
- 
-##### Step 3: Deploy HealthHub Backend
-The deployment of the backend requires setting up the necessary AWS services. Before deploying, confirm these AWS services are correctly configured:
-- AWS Cognito
-- IAM Roles
-- AWS API Gateway
-- AWS DynamoDB
-- AWS S3 Bucket
-- AWS CloudWatch Logs
-- AWS Lambda
-
-Run the deployment using the following command:
-<p align="center">
-<img src="https://i.imgur.com/lKgdgjA.png" height="80%" width="80%" alt="Pic"/>
-<br />
-<br />
- 
-- Verbose logs are available in ".serverless/compose.log"
-<p align="center">
-<img src="https://i.imgur.com/FynhxHo.png" height="80%" width="80%" alt="Pic"/>
-<br />
-<br />
- 
-- Check for Errors 
-<p align="center">
-<img src="https://i.imgur.com/mLWOmF4.png" height="80%" width="80%" alt="Pic"/>
-<br />
-<br />
- 
-2. Validate the creation of AWS resources:
-   - Open CloudFormation check stack processing....
-<p align="center">
-<img src="https://i.imgur.com/x3bzxnj.png" height="80%" width="80%" alt="Pic"/>
-<br />
-<br />
- 
-<p align="center">
-<img src="https://i.imgur.com/SRvlqPp.png" height="80%" width="80%" alt="Pic"/>
-<br />
-<br />
- 
-   - Check CloudWatch for Errors
-<p align="center">
-<img src="https://i.imgur.com/ccPdRbC.png" height="80%" width="80%" alt="Pic"/>
-<br />
-<br />
- 
-<p align="center">
-<img src="https://i.imgur.com/KkSi0t9.png" height="80%" width="80%" alt="Pic"/>
-<br />
-<br />
- 
-   - Check IAM Roles for created Roles
-<p align="center">
-<img src="https://i.imgur.com/Oj2NL4V.png" height="80%" width="80%" alt="Pic"/>
-<br />
-<br />
- 
-<p align="center">
-<img src="https://i.imgur.com/LDYVB8e.png" height="80%" width="80%" alt="Pic"/>
-<br />
-<br />
- 
-   - Check API Gateway
-<p align="center">
-<img src="https://i.imgur.com/53Cscxa.png" height="80%" width="80%" alt="Pic"/>
-<br />
-<br />
- 
-<p align="center">
-<img src="https://i.imgur.com/ZGjWlkJ.png" height="80%" width="80%" alt="Pic"/>
-<br />
-<br />
- 
-<p align="center">
-<img src="https://i.imgur.com/a0itrrc.png" height="80%" width="80%" alt="Pic"/>
-<br />
-<br />
- 
-   - Check Amazon S3 for Buckets 
-<p align="center">
-<img src="https://i.imgur.com/HZ6MJTe.png" height="80%" width="80%" alt="Pic"/>
-<br />
-<br />
- 
-<p align="center">
-<img src="https://i.imgur.com/Yqj7cpD.png" height="80%" width="80%" alt="Pic"/>
-<br />
-<br />
- 
-   - Check Lambda Functions
-<p align="center">
-<img src="https://i.imgur.com/at2EX6H.png" height="80%" width="80%" alt="Pic"/>
-<br />
-<br />
- 
-<p align="center">
-<img src="https://i.imgur.com/RvU3Guc.png" height="80%" width="80%" alt="Pic"/>
-<br />
-<br />
- 
-#### Part 3: Frontend Implementation
-After deploying the backend, proceed with the frontend implementation. This step involves installing dependencies and configuring the project environment for the frontend.
-
-Installing Frontend Dependencies
-- Navigate to the health-hub-frontend directory and install all dependencies:
-<p align="center">
-<img src="https://i.imgur.com/9mgt0z9.png" height="80%" width="80%" alt="Pic"/>
-<br />
-<br />
- 
-- Check Frontend files in src directory
-<p align="center">
-<img src="https://i.imgur.com/1vVUW2o.png" height="80%" width="80%" alt="Pic"/>
-<br />
-<br />
- 
-<p align="center">
-<img src="https://i.imgur.com/we9o8v5.png" height="80%" width="80%" alt="Pic"/>
-<br />
-<br />
- 
-<p align="center">
-<img src="https://i.imgur.com/InMooQ9.png" height="80%" width="80%" alt="Pic"/>
-<br />
-<br />
- 
-##### Step 2: Configuring the API Gateway URL
-1. Copy and modify the .env file:
-<p align="center">
-<img src="https://i.imgur.com/EqX6azc.png" height="80%" width="80%" alt="Pic"/>
-<br />
-<br />
- 
-<p align="center">
-<img src="https://i.imgur.com/a7QdxSF.png" height="80%" width="80%" alt="Pic"/>
-<br />
-<br />
- 
-- Copy API Gateway URL
-<p align="center">
-<img src="https://i.imgur.com/kJMUQJk.png" height="80%" width="80%" alt="Pic"/>
-<br />
-<br />
- 
-<p align="center">
-<img src="https://i.imgur.com/I4u7hC9.png" height="80%" width="80%" alt="Pic"/>
-<br />
-<br />
- 
-2. Update the Vite API base URL with the API Gateway endpoint.
-<p align="center">
-<img src="https://i.imgur.com/Gz3kMmN.png" height="80%" width="80%" alt="Pic"/>
-<br />
-<br />
- 
-**Vite** is a frontend project build tool designed to offer a faster and lighter development experience for modern web projects.
-1. Automatic exposure: These variables are automatically made available in the client code.
-2. Main uses:
-    - API URL Configuration: Allows defining the base API URL that the application will use.
-    - Environment adaptation: Facilitates configuration changes between development, testing, and production.
-3. Flexibility: Enables the use of different URLs (e.g., [http://localhost:3000] for development, [https://your-actual-api-url.com]for production) without changing the source code.
-4. Advantages:
-    - Cleaner code
-    - Easy configuration changes between environments
-    - Centralization of important settings
-
-This method simplifies configuration management across different stages of application development.
-
-##### Step 3: Running the Frontend
-1. Run the application:
-<p align="center">
-<img src="https://i.imgur.com/koaT2kl.png" height="80%" width="80%" alt="Pic"/>
-<br />
-<br />
- 
-<p align="center">
-<img src="https://i.imgur.com/cyN0WcR.png" height="80%" width="80%" alt="Pic"/>
-<br />
-<br />
- 
-2. Ensure the EC2 security group allows access to the application port (5173).
-<p align="center">
-<img src="https://i.imgur.com/gHzewjR.png" height="80%" width="80%" alt="Pic"/>
-<br />
-<br />
- 
-##### Step 4: Testing the Application
-1. Access the application via the public IP address of the EC2 instance.
-<p align="center">
-<img src="https://i.imgur.com/Q03XwHH.png" height="80%" width="80%" alt="Pic"/>
-<br />
-<br />
- 
-<p align="center">
-<img src="https://i.imgur.com/8KZjPeV.png" height="80%" width="80%" alt="Pic"/>
-<br />
-<br />
- 
-2. Add a doctor and a patient:
-   - Doctor:
-     - Email: david.lee@hh.com
-     - Password: 123456
-     - Specialization: Radiology
-<p align="center">
-<img src="https://i.imgur.com/qMOKDMi.png" height="80%" width="80%" alt="Pic"/>
-<br />
-<br />
- 
-   - Patient:
-     - Email: ava.brown@tcb.com
-     - Password: 123456
-<p align="center">
-<img src="https://i.imgur.com/kXUvDOK.png" height="80%" width="80%" alt="Pic"/>
-<br />
-<br />
- 
-3. Schedule an appointment as a patient and validate it as a doctor.
-<p align="center">
-<img src="https://i.imgur.com/pnXqzzB.png" height="80%" width="80%" alt="Pic"/>
-<br />
-<br />
- 
-<p align="center">
-<img src="https://i.imgur.com/MGsxwFx.png" height="80%" width="80%" alt="Pic"/>
+<img src="https://i.imgur.com/BrPex8z.png" height="80%" width="80%" alt="Pic"/>
 <br />
 <br />
 
-With the completion of the foundational architecture and integration testing, the project is prepared for advanced modules involving AI services such as Amazon Polly and Amazon Translate. This systematic approach ensures that resources are efficiently used and lays the groundwork for implementing innovative features in subsequent modules.
+3. Installing Backend Dependencies
+    - Install the required Node.js dependencies for the backend and its services:
+ <p align="center">
+<img src="https://i.imgur.com/jTx6N7Y.png" height="80%" width="80%" alt="Pic"/>
+<br />
+<br />
 
-## Project Conclusion
-The Health Hub project successfully implemented a serverless cloud architecture for a scalable and secure healthcare application. The system's functionality was tested thoroughly in all aspects, including API communication, frontend-backend integration, and user interface workflows. The project also introduced a robust approach to managing and optimizing cloud resources, ensuring no unnecessary costs. While the project is complete for this phase, it paves the way for introducing AI technologies, which will enhance the application's capabilities further.
+<p align="center">
+<img src="https://i.imgur.com/U0LLnpC.png" height="80%" width="80%" alt="Pic"/>
+<br />
+<br />
+ 
+#### Step 2: Deploying HealthHub Backend Services
+1. Deploy All Services
+<p align="center">
+<img src="https://i.imgur.com/eLkmYCb.png" height="80%" width="80%" alt="Pic"/>
+<br />
+<br />
+ 
+    - Monitor the deployment process through CloudFormation stacks to ensure all resources are created without errors.
+ <p align="center">
+<img src="https://i.imgur.com/HGRZHDI.png" height="80%" width="80%" alt="Pic"/>
+<br />
+<br />
+
+<p align="center">
+<img src="https://i.imgur.com/KFUhAZF.png" height="80%" width="80%" alt="Pic"/>
+<br />
+<br />
+
+<p align="center">
+<img src="https://i.imgur.com/rshBrRL.png" height="80%" width="80%" alt="Pic"/>
+<br />
+<br />
+ 
+<p align="center">
+<img src="https://i.imgur.com/3GvdgK0.png" height="80%" width="80%" alt="Pic"/>
+<br />
+<br />
+ 
+    - Check for application creation errors
+<p align="center">
+<img src="https://i.imgur.com/BJAfmrZ.png" height="80%" width="80%" alt="Pic"/>
+<br />
+<br />
+ 
+2. Deploy Individual Services (Optional)
+    - Example for the AI Interaction Service:
+    - `serverless deploy --stage dev --service ai-interaction-service`
+
+#### Step 3: Validating the Deployment
+1. Check CloudFormation Stacks
+    - Validate that all resources, including Lambda functions, DynamoDB tables, and API Gateway endpoints, have been created.
+
+2. Verify Lambda Functions
+    - Confirm the presence of the function:
+    - `hh-ai-interaction-dev-getInteraction`
+
+#### Step 4: Reviewing the Code
+1. Serverless Configuration
+    - Review serverless.yml to understand the services, provider configurations, and resource definitions.
+<p align="center">
+<img src="https://i.imgur.com/0Q0gABy.png" height="80%" width="80%" alt="Pic"/>
+<br />
+<br />
+
+2. AI Interaction Service
+    - Explore aiInteractionService.ts to understand how Amazon Polly is used for voice synthesis and Amazon Translate for text translation.
+<p align="center">
+<img src="https://i.imgur.com/iZbaL8H.png" height="80%" width="80%" alt="Pic"/>
+<br />
+<br />
+
+3. DynamoDB Table
+    - Verify actions like InsertItem and WriteItem configured for storing interactions.
+<p align="center">
+<img src="https://i.imgur.com/Q3YuYVs.png" height="80%" width="80%" alt="Pic"/>
+<br />
+<br />
+
+### Part 2: Frontend Implementation
+#### Step 5: Setting Up the Frontend
+1. Navigate to Frontend Folder
+    - Move to the frontend directory:
+<p align="center">
+<img src="https://i.imgur.com/g0aZaaZ.png" height="80%" width="80%" alt="Pic"/>
+<br />
+<br />
+ 
+2. Install Dependencies
+    - Run:
+<p align="center">
+<img src="https://i.imgur.com/mzvH13n.png" height="80%" width="80%" alt="Pic"/>
+<br />
+<br />
+ 
+#### Step 6: Configuring the API Base URL
+1. Set the API Gateway Endpoint
+    - Copy .env.example to .env and edit the base URL:
+    - Use the API Gateway endpoint URL from the deployment process.
+<p align="center">
+<img src="https://i.imgur.com/gCqtjUR.png" height="80%" width="80%" alt="Pic"/>
+<br />
+<br />
+ 
+<p align="center">
+<img src="https://i.imgur.com/vaI39WZ.png" height="80%" width="80%" alt="Pic"/>
+<br />
+<br />
+ 
+2. Update Tailwind Configuration (if needed):
+    - Rename the configuration file:
+<p align="center">
+<img src="https://i.imgur.com/Tv7I3jG.png" height="80%" width="80%" alt="Pic"/>
+<br />
+<br />
+ 
+<p align="center">
+<img src="https://i.imgur.com/6UIUct4.png" height="80%" width="80%" alt="Pic"/>
+<br />
+<br />
+ 
+#### Step 7: Running the Frontend Application
+1. Start the Application
+    - Run the application:
+<p align="center">
+<img src="https://i.imgur.com/2lGX2ds.png" height="80%" width="80%" alt="Pic"/>
+<br />
+<br />
+ 
+2. Access the Application
+    - Open the application using the EC2 instance's public IP address and port 5173:
+<p align="center">
+<img src="https://i.imgur.com/ndu4qaQ.png" height="80%" width="80%" alt="Pic"/>
+<br />
+<br />
+ 
+<p align="center">
+<img src="https://i.imgur.com/5N3Zf2v.png" height="80%" width="80%" alt="Pic"/>
+<br />
+<br />
+ 
+#### Step 8: Adding Users
+1. Register a Doctor
+    - Example:
+        - Email: david.lee@hh.com
+        - Password: 123456
+        - Role: Doctor
+        - Other Details: Radiology, License Number 111111
+<p align="center">
+<img src="https://i.imgur.com/RWzoWtL.png" height="80%" width="80%" alt="Pic"/>
+<br />
+<br />
+ 
+2. Register a Patient
+    - Example:
+        - Email: ava.brown@tcb.com
+        - Password: 123456
+        - Role: Patient
+<p align="center">
+<img src="https://i.imgur.com/2uakWTg.png" height="80%" width="80%" alt="Pic"/>
+<br />
+<br />
+ 
+#### Step 9: Testing the AI Speech Feature
+1. Log in as a Doctor
+    - Use the credentials created in the previous step.
+ <p align="center">
+<img src="https://i.imgur.com/4LLDnbJ.png" height="80%" width="80%" alt="Pic"/>
+<br />
+<br />
+
+2. Generate AI Speech
+    - Test with sample medical instructions in multiple languages, such as English and Portuguese.
+<p align="center">
+<img src="https://i.imgur.com/WbHBAZz.png" height="80%" width="80%" alt="Pic"/>
+<br />
+<br />
+ 
+3. Validate Speech Conversion
+    - Ensure the speech is saved in the patient's medical records.
+
+4. Monitor Metrics
+    - Use Amazon Translate and CloudWatch to check API calls and logs.
+<p align="center">
+<img src="https://i.imgur.com/UFoDXaL.png" height="80%" width="80%" alt="Pic"/>
+<br />
+<br />
+ 
+<p align="center">
+<img src="https://i.imgur.com/E5c9bCX.png" height="80%" width="80%" alt="Pic"/>
+<br />
+<br />
+
+<p align="center">
+<img src="https://i.imgur.com/mwVIjgv.png" height="80%" width="80%" alt="Pic"/>
+<br />
+<br />
+ 
+<p align="center">
+<img src="https://i.imgur.com/cYazlQH.png" height="80%" width="80%" alt="Pic"/>
+<br />
+<br />
+
+<p align="center">
+<img src="https://i.imgur.com/NGeZoVw.png" height="80%" width="80%" alt="Pic"/>
+<br />
+<br />
+ 
+## Conclusion
+The project successfully delivered an end-to-end system for transcribing doctor-patient conversations into text. The integration of Azure AI Speech Service with AWS components enabled seamless transcription and storage in a secure and scalable manner. Multilingual support ensured the system's adaptability for diverse user needs.
 
 ### Challenges Encountered
-1. **Configuration Issues**: Initial configuration of API Gateway and environment variables required several iterations to resolve errors.
-2. **Frontend Integration Bugs**: Issues such as Tailwind JS file extension conflicts required manual debugging and resolution.
-3. **Resource Management**: Automating resource cleanup for AWS services involved troubleshooting residual components that were not removed by CloudFormation.
+1.	Multilingual Transcription Accuracy: Initial misrecognition of certain accents required fine-tuning of Azure Speech Service configurations.
+2.	API Integration: Ensuring smooth communication between frontend and backend systems presented some debugging challenges.
+3.	Cost Management: While testing, controlling resource usage required active monitoring to minimize expenses.
 
 ### Lessons Learned
-1. **Importance of Proper Planning**: Setting up a robust architectural foundation requires thorough planning and iterative testing.
-2. **Configuration Flexibility**: Using environment variables ensures seamless integration between backend APIs and frontend systems.
-3. **Efficient Resource Cleanup**: Establishing consistent cleanup practices reduces unexpected costs and ensures efficient resource utilization.
+1.	Proper configuration and testing of Azure AI Speech Service are critical for achieving high transcription accuracy.
+2.	Real-time monitoring using CloudWatch is invaluable for detecting and addressing system performance issues promptly.
+3.	Hybrid cloud architectures (Azure + AWS) can enhance functionality but require careful orchestration and compatibility testing.
 
-### Future Scope
-- **AI Integration**: Incorporate AI technologies, such as Amazon Polly for text-to-speech and Amazon Translate for multilingual support.
-- **Enhanced User Features**: Add modules for more comprehensive healthcare services, such as medical history tracking and telemedicine.
-- **Strengthening Security**: Implement HTTPS, multi-factor authentication, and encryption to further secure sensitive data.
-- **Continuous Monitoring**: Integrate monitoring tools like AWS CloudWatch to improve observability and track application performance.
+### Future Improvements
+1.	Enhanced Language Support: Expand the system to support additional languages to cater to a broader audience.
+2.	Real-Time Transcription: Implement streaming transcription for live consultations.
+3.	User Interface Enhancements: Improve the frontend interface for easier interaction and better usability.
+4.	Cost Optimization: Explore AWS Savings Plans and Reserved Instances for predictable workloads to reduce operational costs further.
